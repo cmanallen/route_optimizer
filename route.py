@@ -69,35 +69,36 @@ def matrix_to_tree(nodes):
     tree[node] = matrix_to_tree(children)
   return tree
 
-def chop_tree(tree, start):
+def set_start(tree, start):
   """
-  Chops extraneous nodes leaving only
-  the starting node
+  Removes extraneous starting nodes if only one
+  starting location is desired.
   """
   tree = tree[start]
   return tree
 
-def filter_tree(tree, end):
+def set_end(tree, end):
   """
   Removes ending nodes when they are not the
-  last node of the branch.
+  last node of the branch.  Used when one
+  ending location is desired.
   """
   if tree[end]:
     del tree[end]
   nodes = tree.keys()
   if len(nodes) > 1:
     for node in nodes:
-      filter_tree(tree[node], end)
+      set_end(tree[node], end)
   return tree
 
-def calculate_distance(tree, matrix, start, distance=0):
+def map_distance(tree, matrix, start, distance=0):
   """
   Adds up the distance from start to end
   """
   for node in tree:
     new_distance = distance + node_distance(matrix, start, node)
     if tree[node]:
-      calculate_distance(tree[node], matrix, node, new_distance)
+      map_distance(tree[node], matrix, node, new_distance)
     else:
       tree[node] = new_distance
   return tree
@@ -111,7 +112,7 @@ def node_distance(matrix, start, end):
 
 nodes = [key for key in x.keys()]
 a = matrix_to_tree(nodes)
-b = chop_tree(a, 'A')
-c = filter_tree(b, 'G')
-d = calculate_distance(c, x, 'A')
+b = set_start(a, 'A')
+c = set_end(b, 'G')
+d = map_distance(c, x, 'A')
 print(d)
