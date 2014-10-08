@@ -1,3 +1,4 @@
+# Testing matrix
 x = {
   'A': {
     'B': 1,
@@ -91,22 +92,23 @@ def set_end(tree, end):
       set_end(tree[node], end)
   return tree
 
-def map_distance(tree, matrix, start, distance=0):
+def map_tree(tree, matrix, start, distance=0):
   """
-  Adds up the distance from start to end
+  Maps the distance from the root to each
+  ending node.
   """
   for node in tree:
     new_distance = distance + node_distance(matrix, start, node)
     if tree[node]:
-      map_distance(tree[node], matrix, node, new_distance)
+      map_tree(tree[node], matrix, node, new_distance)
     else:
       tree[node] = new_distance
   return tree
 
 def node_distance(matrix, start, end):
   """
-  Searches a matrix for the value
-  of two points
+  Searches a matrix for the value of two
+  points.
   """
   return matrix[start][end]
 
@@ -114,5 +116,5 @@ nodes = [key for key in x.keys()]
 a = matrix_to_tree(nodes)
 b = set_start(a, 'A')
 c = set_end(b, 'G')
-d = map_distance(c, x, 'A')
+d = map_tree(c, x, 'A')
 print(d)
